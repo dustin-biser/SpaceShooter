@@ -1,7 +1,10 @@
-obj
-bin
-build
-*.startup*
-*.vs
-*.filters
-*.user
+# Ignore everything
+*
+
+# But do not ignore following files/directories:
+!.gitignore
+!README.md
+!SpaceShooter.sln
+!SpaceShooter.vcxproj
+!Source
+!Assets
