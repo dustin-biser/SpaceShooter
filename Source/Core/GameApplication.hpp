@@ -1,3 +1,7 @@
+//
+// GameApplication.hpp
+//
+
 #pragma once
 
 #include "NumericTypes.hpp"
@@ -16,9 +20,16 @@ public:
 
 	uint getWindowHeight() const;
 
-	void onKeyDown(uint8 key);
+	void initialze();
 
-	void onKeyUp(uint8 key);
+	void onKeyDown (
+		uint8 key
+	);
+
+	void onKeyUp (
+		uint8 key
+	);
+
 
 private:
 	uint _windowWidth;

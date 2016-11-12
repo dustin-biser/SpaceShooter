@@ -4,7 +4,7 @@
 
 class GameApplication;
 
-class Win32Application {
+class Win32Window {
 public:
 	static int Run (
 		GameApplication * game,

@@ -1,8 +1,13 @@
+//
+// GameApplication.cpp
+//
+
 #include "pch.h"
 
-#include "GameApplication.hpp"
+#include "Core/GameApplication.hpp"
 
 
+//---------------------------------------------------------------------------------------
 GameApplication::GameApplication (
 	uint windowWidth,
 	uint windowHeight,
@@ -31,6 +36,12 @@ uint GameApplication::getWindowWidth() const
 uint GameApplication::getWindowHeight() const
 {
 	return _windowHeight;
+}
+
+//---------------------------------------------------------------------------------------
+void GameApplication::initialze()
+{
+
 }
 
 //---------------------------------------------------------------------------------------

@@ -5,12 +5,15 @@
 #include <cwchar>
 #include <thread>
 
-#include "Win32Application.hpp"
-#include "GameApplication.hpp"
+#include "Core/Win32Window.hpp"
+#include "Core/GameApplication.hpp"
 
-HWND Win32Application::hwnd = nullptr;
+HWND Win32Window::hwnd = nullptr;
 
-int Win32Application::Run (
+
+
+//---------------------------------------------------------------------------------------
+int Win32Window::Run (
 	GameApplication * game,
     HINSTANCE hInstance,
     int nCmdShow
@@ -116,8 +119,10 @@ int Win32Application::Run (
 	return static_cast<char>(msg.wParam);
 }
 
+
+//---------------------------------------------------------------------------------------
 // Main message handler.
-LRESULT CALLBACK Win32Application::WindowProc (
+LRESULT CALLBACK Win32Window::WindowProc (
     HWND hWnd,
     UINT message,
     WPARAM wParam,
@@ -146,6 +151,9 @@ LRESULT CALLBACK Win32Application::WindowProc (
         }
 		else if (game)
 		{
+			LOG_INFO("KeyDown");
+			LOG_WARNING("KeyDown");
+			LOG_ERROR("KeyDown");
 			game->onKeyDown(static_cast<UINT8>(wParam));
 		}
 		return 0;

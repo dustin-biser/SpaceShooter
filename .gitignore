@@ -6,5 +6,9 @@
 !README.md
 !SpaceShooter.sln
 !SpaceShooter.vcxproj
-!Source
 !Assets
+!Source
+!Source/Collision
+!Source/Core
+!Source/Graphics
+!Source/Input
