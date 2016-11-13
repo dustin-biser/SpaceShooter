@@ -12,9 +12,7 @@ public:
         int nCmdShow
     );
 
-	static HWND GetHwnd () {
-        return hwnd;
-    }
+	static HWND GetHwnd ();
 
 protected:
 	static LRESULT CALLBACK WindowProc (
@@ -25,6 +23,6 @@ protected:
     );
 
 private:
-	static HWND hwnd;
+	static HWND _hWnd;
 
 };

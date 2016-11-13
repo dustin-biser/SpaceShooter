@@ -3,31 +3,51 @@
 //
 #pragma once
 
+#include <cwchar>
 #include <debugapi.h>
 
-// Logs information string to Output Window.
+#define LOG_BUFFER_LENGTH 256
+#define LOG_LEVEL_INFO L"Log Info: "
+#define LOG_LEVEL_WARNING L"Log Warning: "
+#define LOG_LEVEL_ERROR L"Log Error: "
+
 #if defined(_DEBUG)
-#define LOG_INFO(str) \
-	OutputDebugStringW(L"Info: " str "\n")
+#define LOG(levelWString, format, ...) \
+	do { \
+		wchar_t buffer[LOG_BUFFER_LENGTH]; \
+		int wcharsWritten = swprintf(buffer, LOG_BUFFER_LENGTH, levelWString); \
+		wcharsWritten += swprintf(buffer + wcharsWritten, LOG_BUFFER_LENGTH, L##format, __VA_ARGS__); \
+		swprintf(buffer + wcharsWritten, LOG_BUFFER_LENGTH, L"\n"); \
+		OutputDebugStringW(buffer); \
+	} while(0)
 #else
-#define LOG_INFO(str) 
+#define LOG(levelWString, format, ...)
+#endif
+
+
+#if defined(_DEBUG)
+// Logs information string to Output Window.
+// @param format - string literal with optional formatting.
+#define LOG_INFO(format, ...) LOG(LOG_LEVEL_INFO, format, __VA_ARGS__)
+#else
+#define LOG_INFO(format, ...)
 #endif
 	
 
-// Logs warning string to Output Window.
 #if defined(_DEBUG)
-#define LOG_WARNING(str) \
-	OutputDebugStringW(L"Warning: " str "\n")
+// Logs warning string to Output Window.
+// @param format - string literal with optional formatting.
+#define LOG_WARNING(format, ...) LOG(LOG_LEVEL_WARNING, format, __VA_ARGS__)
 #else
-#define LOG_WARNING(str) 
+#define LOG_WARNING(format, ...)
 #endif
 
 
-// Logs error string to Output Window.
 #if defined(_DEBUG)
-#define LOG_ERROR(str) \
-	OutputDebugStringW(L"Error: " str "\n")
+// Logs error string to Output Window.
+// @param format - string literal with optional formatting.
+#define LOG_ERROR(format, ...) LOG(LOG_LEVEL_ERROR, format, __VA_ARGS__)
 #else
-#define LOG_ERROR(str) 
+#define LOG_ERROR(format, ...)
 #endif
 

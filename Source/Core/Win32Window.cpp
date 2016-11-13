@@ -8,7 +8,7 @@
 #include "Core/Win32Window.hpp"
 #include "Core/GameApplication.hpp"
 
-HWND Win32Window::hwnd = nullptr;
+HWND Win32Window::_hWnd = nullptr;
 
 
 
@@ -52,7 +52,7 @@ int Win32Window::Run (
 	AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
 	// Create the window and store a handle to it.
-	hwnd = CreateWindow (
+	_hWnd = CreateWindow (
 		windowClass.lpszClassName,
 		game->getWindowTitle(),
 		WS_OVERLAPPEDWINDOW,
@@ -63,19 +63,19 @@ int Win32Window::Run (
 		nullptr,		// We have no parent window.
 		nullptr,		// We aren't using menus.
 		hInstance,
-		game            // Store pointer to the D3D12Demo in the user data slot.
+		game            // Store pointer to GameApplication instance in the user data slot.
                         // We'll retrieve this later within the WindowProc in order
-                        // interact with the D3D12Demo instance.
+                        // to forward messages to the GameApplication.
     );
 
-	ShowWindow(hwnd, nCmdShow);
+	ShowWindow(_hWnd, nCmdShow);
 
     //-- Timing information:
     static uint32 frameCount(0);
-    static float fpsTimer(0.0f);
+    static float fpsTimer(0.f);
 
 	// Main sample loop.
-	MSG msg = {};
+	MSG msg = {0};
 	while (msg.message != WM_QUIT)
 	{
         // Start frame timer.
@@ -86,7 +86,7 @@ int Win32Window::Run (
             // Translate virtual-key codes into character messages.
             TranslateMessage(&msg);
 
-            // Dispatches a message to a the registered window procedure.
+            // Dispatches message to the registered window procedure.
             DispatchMessage(&msg);
         }
 
@@ -96,9 +96,8 @@ int Win32Window::Run (
         auto timerEnd = std::chrono::high_resolution_clock::now();
         ++frameCount;
 
-        auto timeDelta = 
-            std::chrono::duration<double, std::milli>(timerEnd - timerStart).count();
-        fpsTimer += (float)timeDelta;
+        auto timeDelta = std::chrono::duration<double, std::milli>(timerEnd - timerStart).count();
+        fpsTimer += static_cast<float>(timeDelta);
 
         //-- Update window title only after so many milliseconds:
         if (fpsTimer > 400.0f) {
@@ -107,7 +106,7 @@ int Win32Window::Run (
             char buffer[256];
 			sprintf(buffer, "%s - %.1f fps (%.2f ms)", 
 				game->getWindowTitle(), fps, msPerFrame);
-            SetWindowText(hwnd, buffer);
+            SetWindowText(_hWnd, buffer);
 
             // Reset timing info.
             fpsTimer = 0.0f;
@@ -119,6 +118,12 @@ int Win32Window::Run (
 	return static_cast<char>(msg.wParam);
 }
 
+
+//---------------------------------------------------------------------------------------
+HWND Win32Window::GetHwnd()
+{
+	return _hWnd;
+}
 
 //---------------------------------------------------------------------------------------
 // Main message handler.
@@ -151,9 +156,10 @@ LRESULT CALLBACK Win32Window::WindowProc (
         }
 		else if (game)
 		{
-			LOG_INFO("KeyDown");
-			LOG_WARNING("KeyDown");
-			LOG_ERROR("KeyDown");
+			LOG_INFO("button pressed: %c", static_cast<char>(wParam));
+			LOG_WARNING("button pressed: %c", static_cast<char>(wParam));
+			LOG_ERROR("button pressed: %c", static_cast<char>(wParam));
+
 			game->onKeyDown(static_cast<UINT8>(wParam));
 		}
 		return 0;
@@ -164,6 +170,7 @@ LRESULT CALLBACK Win32Window::WindowProc (
 			game->onKeyUp(static_cast<UINT8>(wParam));
 		}
 		return 0;
+
 
 	case WM_PAINT:
         ValidateRect(hWnd, NULL);
