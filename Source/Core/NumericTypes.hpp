@@ -1,7 +1,6 @@
 //
-// NumericTypes.h
+// NumericTypes.hpp
 //
-
 #pragma once
 #include <cstdint>
 

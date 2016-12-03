@@ -6,6 +6,8 @@
 
 #include "NumericTypes.hpp"
 
+#include "InputHandler.hpp"
+
 class GameApplication {
 public:
 	GameApplication (
@@ -22,12 +24,12 @@ public:
 
 	void initialze();
 
-	void onKeyDown (
-		uint8 key
+	void keyDown (
+		uint8 virtualKey
 	);
 
-	void onKeyUp (
-		uint8 key
+	void keyUp (
+		uint8 virtualKey
 	);
 
 
@@ -35,4 +37,6 @@ private:
 	uint _windowWidth;
 	uint _windowHeight;
 	const char * _windowTitle;
+
+	InputHandler _inputHandler;
 };

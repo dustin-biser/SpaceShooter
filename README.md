@@ -1,2 +1,2 @@
 # Space Shooter
-2D space shooting game for Win32.
+Space shooting game for Windows 10.

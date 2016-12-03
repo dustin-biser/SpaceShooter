@@ -45,16 +45,16 @@ void GameApplication::initialze()
 }
 
 //---------------------------------------------------------------------------------------
-void GameApplication::onKeyDown (
-	uint8 key
+void GameApplication::keyDown (
+	uint8 virtualKey
 ) {
-
+	_inputHandler.keyDown(virtualKey);
 }
 
 //---------------------------------------------------------------------------------------
-void GameApplication::onKeyUp (
-	uint8 key
+void GameApplication::keyUp (
+	uint8 virtualKey
 ) {
-
+	_inputHandler.keyUp(virtualKey);
 }
 

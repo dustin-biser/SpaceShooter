@@ -123,8 +123,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)Assets\Shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>call PostBuild.bat</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
@@ -175,8 +174,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)Assets\Shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>call PostBuild.bat</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
@@ -185,10 +183,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="PostBuild.bat" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\GameApplication.cpp" />
+    <ClCompile Include="Source\Core\InputHandler.cpp" />
     <ClCompile Include="Source\Core\Main.cpp" />
     <ClCompile Include="Source\Core\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -199,6 +199,7 @@
   <ItemGroup>
     <ClInclude Include="Source\Core\DebugUtils.h" />
     <ClInclude Include="Source\Core\GameApplication.hpp" />
+    <ClInclude Include="Source\Core\InputHandler.hpp" />
     <ClInclude Include="Source\Core\NumericTypes.hpp" />
     <ClInclude Include="Source\Core\pch.h" />
     <ClInclude Include="Source\Core\Win32Window.hpp" />

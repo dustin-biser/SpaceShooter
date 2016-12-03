@@ -150,24 +150,29 @@ LRESULT CALLBACK Win32Window::WindowProc (
 		}
 		return 0;
 
+	case WM_LBUTTONDOWN:
+	{
+		POINT p;
+		GetCursorPos(&p);
+		ScreenToClient(hWnd, &p);
+		LOG_INFO("Cursor: (%d,%d)", p.x, p.y);
+		return 0;
+	}
+
 	case WM_KEYDOWN:
         if (wParam == VK_ESCAPE) {
             PostQuitMessage(0);
         }
 		else if (game)
 		{
-			LOG_INFO("button pressed: %c", static_cast<char>(wParam));
-			LOG_WARNING("button pressed: %c", static_cast<char>(wParam));
-			LOG_ERROR("button pressed: %c", static_cast<char>(wParam));
-
-			game->onKeyDown(static_cast<UINT8>(wParam));
+			game->keyDown(static_cast<uint8>(wParam));
 		}
 		return 0;
 
 	case WM_KEYUP:
 		if (game)
 		{
-			game->onKeyUp(static_cast<UINT8>(wParam));
+			game->keyUp(static_cast<uint8>(wParam));
 		}
 		return 0;
 

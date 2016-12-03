@@ -13,6 +13,7 @@ int WINAPI WinMain (
 	LPSTR, 
 	int nCmdShow
 ) {
+	// Stack allocate.
 	GameApplication game = GameApplication(1024, 768, "Space Shooter");
 	return Win32Window::Run(&game, hInstance, nCmdShow);
 }
