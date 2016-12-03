@@ -6,6 +6,7 @@
 !README.md
 !SpaceShooter.sln
 !SpaceShooter.vcxproj
+!PostBuild.bat
 !Assets
 !Source
 !Source/Collision
