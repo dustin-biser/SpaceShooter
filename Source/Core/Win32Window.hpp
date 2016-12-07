@@ -1,6 +1,7 @@
 #pragma once
 
-#include <Windows.h>
+#include <windef.h>
+#include <minwindef.h>
 
 class GameApplication;
 
@@ -23,6 +24,6 @@ protected:
     );
 
 private:
-	static HWND _hWnd;
-
+	// Handle to window
+	static HWND _hWindow;
 };

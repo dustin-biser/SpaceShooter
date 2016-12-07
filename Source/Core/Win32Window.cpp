@@ -8,7 +8,7 @@
 #include "Core/Win32Window.hpp"
 #include "Core/GameApplication.hpp"
 
-HWND Win32Window::_hWnd = nullptr;
+HWND Win32Window::_hWindow = nullptr;
 
 
 
@@ -18,18 +18,7 @@ int Win32Window::Run (
     HINSTANCE hInstance,
     int nCmdShow
 ) {
-	assert(game);
-
-    //-- Open a new console window and redirect std streams to it:
-    {
-        // Open a new console window
-        AllocConsole();
-
-        //-- Associate std input/output with newly opened console window:
-        FILE * file0 = freopen("CONIN$", "r", stdin);
-        FILE * file1 = freopen("CONOUT$", "w", stdout);
-        FILE * file2 = freopen("CONOUT$", "w", stderr);
-    }
+	ASSERT(game);
 
 	//-- Initialize the window class:
 	WNDCLASSEX windowClass = { 0 };
@@ -37,9 +26,9 @@ int Win32Window::Run (
 	windowClass.style = CS_HREDRAW | CS_VREDRAW;
 	windowClass.lpfnWndProc = WindowProc;
 	windowClass.hInstance = hInstance;
-	windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+	windowClass.hCursor = ::LoadCursor(NULL, IDC_ARROW);
 	windowClass.lpszClassName = "Win32Window";
-	RegisterClassEx(&windowClass);
+	::RegisterClassEx(&windowClass);
 
     //-- Center window:
     RECT windowRect;
@@ -49,10 +38,10 @@ int Win32Window::Run (
 	windowRect.left = (windowRect.right / 2) - (width / 2);
 	windowRect.top = (windowRect.bottom / 2) - (height / 2);
 
-	AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
+	::AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
 	// Create the window and store a handle to it.
-	_hWnd = CreateWindow (
+	_hWindow = ::CreateWindow (
 		windowClass.lpszClassName,
 		game->getWindowTitle(),
 		WS_OVERLAPPEDWINDOW,
@@ -68,7 +57,9 @@ int Win32Window::Run (
                         // to forward messages to the GameApplication.
     );
 
-	ShowWindow(_hWnd, nCmdShow);
+	game->initialze (_hWindow);
+
+	::ShowWindow (_hWindow, nCmdShow);
 
     //-- Timing information:
     static uint32 frameCount(0);
@@ -81,16 +72,16 @@ int Win32Window::Run (
         // Start frame timer.
         auto timerStart = std::chrono::high_resolution_clock::now();
         // Process any messages in the queue.
-        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+        if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
         {
             // Translate virtual-key codes into character messages.
-            TranslateMessage(&msg);
+            ::TranslateMessage(&msg);
 
             // Dispatches message to the registered window procedure.
-            DispatchMessage(&msg);
+            ::DispatchMessage(&msg);
         }
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(16));
+		game->update ();
 
         // End frame timer.
         auto timerEnd = std::chrono::high_resolution_clock::now();
@@ -106,7 +97,7 @@ int Win32Window::Run (
             char buffer[256];
 			sprintf(buffer, "%s - %.1f fps (%.2f ms)", 
 				game->getWindowTitle(), fps, msPerFrame);
-            SetWindowText(_hWnd, buffer);
+            ::SetWindowText(_hWindow, buffer);
 
             // Reset timing info.
             fpsTimer = 0.0f;
@@ -122,7 +113,7 @@ int Win32Window::Run (
 //---------------------------------------------------------------------------------------
 HWND Win32Window::GetHwnd()
 {
-	return _hWnd;
+	return _hWindow;
 }
 
 //---------------------------------------------------------------------------------------
@@ -142,8 +133,8 @@ LRESULT CALLBACK Win32Window::WindowProc (
 	{
 	case WM_CREATE:
 		{
-			// Save the GameApplication ptr passed into CreateWindow and store it in the
-			// window's user data field so we can retrieve it later.
+			// Save the GameApplication pointer passed into CreateWindow and store it in
+			// the window's user data field so we can retrieve it later.
 			LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
 			SetWindowLongPtr(hWnd, GWLP_USERDATA,
                 reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));

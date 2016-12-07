@@ -4,9 +4,14 @@
 
 #pragma once
 
-#include "NumericTypes.hpp"
+#include <memory>
 
-#include "InputHandler.hpp"
+#include <windef.h>
+
+#include "Core/Common.hpp"
+#include "Core/InputHandler.hpp"
+
+class IRenderer;
 
 class GameApplication {
 public:
@@ -18,11 +23,13 @@ public:
 
 	const char * getWindowTitle() const;
 
-	uint getWindowWidth() const;
+	uint getWindowWidth () const;
 
-	uint getWindowHeight() const;
+	uint getWindowHeight () const;
 
-	void initialze();
+	void initialze (
+		HWND hWindow
+	);
 
 	void keyDown (
 		uint8 virtualKey
@@ -31,6 +38,8 @@ public:
 	void keyUp (
 		uint8 virtualKey
 	);
+	
+	void update ();
 
 
 private:
@@ -39,4 +48,5 @@ private:
 	const char * _windowTitle;
 
 	InputHandler _inputHandler;
+	std::shared_ptr<IRenderer> _renderer;
 };

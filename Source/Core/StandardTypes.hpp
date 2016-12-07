@@ -1,5 +1,5 @@
 //
-// NumericTypes.hpp
+// StandardTypes.hpp
 //
 #pragma once
 #include <cstdint>
@@ -20,4 +20,7 @@ typedef unsigned short ushort;
 
 typedef uint8_t byte;
 
+
+// Mark static functions as "internal" making them easier to spot in source code.
+#define internal static
 
