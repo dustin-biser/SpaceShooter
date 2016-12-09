@@ -9,6 +9,8 @@
 #include <string>
 #include <cstring>
 
+#include "Core/AssetLoader.hpp"
+
 #include "Graphics/D3D12Renderer.hpp"
 #include "Graphics/d3dx12.h"
 
@@ -588,49 +590,8 @@ void D3D12Renderer::createCommandList (
 }
 
 //---------------------------------------------------------------------------------------
-internal void GetWorkingDir (
-	char * path,
-	uint pathSize
-) {
-	ASSERT (path);
+#include "Core/AssetLoader.hpp"
 
-	DWORD size = GetModuleFileName (nullptr, path, pathSize);
-	if (size == 0 || size == pathSize) {
-		// Method failed or path was truncated.
-		__debugbreak ();
-	}
-
-	// Get pointer to last backslash in path.
-	char * lastSlash = std::strrchr(path, '\\');
-	if (lastSlash) {
-		// Insert null char after last backslash.
-		*(lastSlash + 1) = '\0';
-	}
-}
-
-//---------------------------------------------------------------------------------------
-internal std::wstring GetAssetPath (
-	const char * assetName
-) {
-	ASSERT (assetName);
-
-	//TODO (Dustin) - For now assume assets are in working dir. Later we want asset path lookup table.
-
-	std::string assetPath;
-	{
-		char pathBuffer[512];
-		GetWorkingDir (pathBuffer, _countof (pathBuffer));
-		assetPath = std::string (pathBuffer) + std::string (assetName);
-	}
-
-	// Convert to wstring.
-	std::wstring result;
-	result.assign (assetPath.begin(), assetPath.end ());
-
-	return result;
-}
-
-//---------------------------------------------------------------------------------------
 void D3D12Renderer::loadAssets (
 	ID3D12GraphicsCommandList * uploadCmdList,
 	ComPtr<ID3D12Resource> & uploadBuffer
@@ -638,21 +599,19 @@ void D3D12Renderer::loadAssets (
 	// Create an empty root signature.
 	createRootSignature ();
 
-	// Load shader bytecode into ID3DBlobs.
-	ComPtr<ID3DBlob> vertexShaderBlob;
-	ComPtr<ID3DBlob> pixelShaderBlob;
-	D3DReadFileToBlob (GetAssetPath ("VertexShader.cso").c_str(), &vertexShaderBlob);
-	D3DReadFileToBlob (GetAssetPath ("PixelShader.cso").c_str(), &pixelShaderBlob);
+	// Load shader bytecode.
+	AssetLoader::load ("VertexShader.cso", &m_shaderGroup.vertexShader);
+	AssetLoader::load ("PixelShader.cso", &m_shaderGroup.pixelShader);
 
-	createPipelineState (vertexShaderBlob.Get (), pixelShaderBlob.Get ());
+
+	createPipelineState (m_shaderGroup);
 
 	uploadVertexDataToDefaultHeap (uploadCmdList, uploadBuffer);
 }
 
 //---------------------------------------------------------------------------------------
 void D3D12Renderer::createPipelineState (
-	ID3DBlob * vertexShaderBlob,
-	ID3DBlob * pixelShaderBlob
+	const ShaderGroup & shaderGroup
 ) {
 	// Define the vertex input layout.
 	D3D12_INPUT_ELEMENT_DESC inputElementDescriptor[2];
@@ -685,8 +644,8 @@ void D3D12Renderer::createPipelineState (
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
 	psoDesc.InputLayout = {inputElementDescriptor, _countof (inputElementDescriptor)};
 	psoDesc.pRootSignature = m_rootSignature.Get ();
-	psoDesc.VS = CD3DX12_SHADER_BYTECODE (vertexShaderBlob);
-	psoDesc.PS = CD3DX12_SHADER_BYTECODE (pixelShaderBlob);
+	psoDesc.VS = shaderGroup.vertexShader->byteCode;
+	psoDesc.PS = shaderGroup.pixelShader->byteCode;
 	psoDesc.RasterizerState = rasterizerState;
 	psoDesc.BlendState = CD3DX12_BLEND_DESC (D3D12_DEFAULT);
 
@@ -833,36 +792,6 @@ void D3D12Renderer::uploadVertexDataToDefaultHeap (
 }
 
 
-
-//---------------------------------------------------------------------------------------
-internal void waitForGpuFence (
-	ID3D12Fence * fence,
-	uint64 completionValue,
-	HANDLE fenceEvent
-) {
-	if (fence->GetCompletedValue () < completionValue) {
-		CHECK_D3D_RESULT (
-			fence->SetEventOnCompletion (completionValue, fenceEvent)
-		);
-		// fenceEvent will be signaled once GPU updates fence object to completionValue.
-		WaitForSingleObject (fenceEvent, INFINITE);
-	}
-}
-
-//---------------------------------------------------------------------------------------
-void D3D12Renderer::waitForGpuCompletion (
-	ID3D12CommandQueue * commandQueue
-) {
-	CHECK_D3D_RESULT (
-		commandQueue->Signal (m_frameFence[m_frameIndex].Get (), m_currentFenceValue)
-	);
-	m_fenceValue[m_frameIndex] = m_currentFenceValue;
-	++m_currentFenceValue;
-
-	::waitForGpuFence (m_frameFence[m_frameIndex].Get (),
-		m_fenceValue[m_frameIndex], m_frameFenceEvent[m_frameIndex]);
-}
-
 //---------------------------------------------------------------------------------------
 void D3D12Renderer::createRootSignature ()
 {
@@ -894,5 +823,36 @@ void D3D12Renderer::createRootSignature ()
 			IID_PPV_ARGS (&m_rootSignature)
 		)
 	);
+}
+
+//---------------------------------------------------------------------------------------
+internal void waitForGpuFence (
+	ID3D12Fence * fence,
+	uint64 completionValue,
+	HANDLE fenceEvent
+)
+{
+	if (fence->GetCompletedValue () < completionValue) {
+		CHECK_D3D_RESULT (
+			fence->SetEventOnCompletion (completionValue, fenceEvent)
+		);
+		// fenceEvent will be signaled once GPU updates fence object to completionValue.
+		::WaitForSingleObject (fenceEvent, INFINITE);
+	}
+}
+
+//---------------------------------------------------------------------------------------
+void D3D12Renderer::waitForGpuCompletion (
+	ID3D12CommandQueue * commandQueue
+)
+{
+	CHECK_D3D_RESULT (
+		commandQueue->Signal (m_frameFence[m_frameIndex].Get (), m_currentFenceValue)
+	);
+	m_fenceValue[m_frameIndex] = m_currentFenceValue;
+	++m_currentFenceValue;
+
+	::waitForGpuFence (m_frameFence[m_frameIndex].Get (),
+		m_fenceValue[m_frameIndex], m_frameFenceEvent[m_frameIndex]);
 }
 

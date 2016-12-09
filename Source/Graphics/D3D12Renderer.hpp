@@ -10,6 +10,7 @@
 
 #include "Core/Common.hpp"
 #include "Graphics/IRenderer.hpp"
+#include "Graphics/ShaderUtils.hpp"
 
 
 class D3D12Renderer : public IRenderer {
@@ -60,6 +61,8 @@ private:
 	ushort m_indexCount;
 	D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
 	D3D12_INDEX_BUFFER_VIEW m_indexBufferView;
+
+	ShaderGroup m_shaderGroup;
 
 
 	// Resources that are referenced by descriptor handles (a.k.a. resource views).
@@ -126,8 +129,7 @@ private:
 	);
 
 	void createPipelineState (
-		ID3DBlob * vertexShaderBlob,
-		ID3DBlob * pixelShaderBlob
+		const ShaderGroup & shaderGroup
 	);
 
 	void createRootSignature ();

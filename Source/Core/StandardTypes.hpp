@@ -20,6 +20,8 @@ typedef unsigned short ushort;
 
 typedef uint8_t byte;
 
+typedef int bool32;
+
 
 // Mark static functions as "internal" making them easier to spot in source code.
 #define internal static

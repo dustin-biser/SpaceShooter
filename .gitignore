@@ -7,7 +7,13 @@
 !SpaceShooter.sln
 !SpaceShooter.vcxproj
 !PostBuild.bat
+
 !Assets
+!Assets/Materials
+!Assets/Meshes
+!Assets/Shaders
+!Assets/Textures
+
 !Source
 !Source/Collision
 !Source/Core

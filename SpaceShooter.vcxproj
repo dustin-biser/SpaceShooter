@@ -188,6 +188,11 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Core\AssetLocator.cpp" />
+    <ClCompile Include="Source\Graphics\ShaderUtils.cpp" />
+    <ClInclude Include="Source\Core\AssetLoader.inl">
+      <FileType>CppCode</FileType>
+    </ClInclude>
     <ClCompile Include="Source\Core\GameApplication.cpp" />
     <ClCompile Include="Source\Core\InputHandler.cpp" />
     <ClCompile Include="Source\Core\Main.cpp" />
@@ -197,8 +202,12 @@
     </ClCompile>
     <ClCompile Include="Source\Core\Win32Window.cpp" />
     <ClCompile Include="Source\Graphics\D3D12Renderer.cpp" />
+    <ClInclude Include="Source\Core\AssetLocator.hpp" />
+    <ClInclude Include="Source\Graphics\RenderComponent.hpp" />
+    <ClInclude Include="Source\Graphics\ShaderUtils.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Core\AssetLoader.hpp" />
     <ClInclude Include="Source\Core\Common.hpp" />
     <ClInclude Include="Source\Core\DebugUtils.hpp" />
     <ClInclude Include="Source\Core\GameApplication.hpp" />
@@ -209,6 +218,7 @@
     <ClInclude Include="Source\Graphics\D3D12Renderer.hpp" />
     <ClInclude Include="Source\Graphics\d3dx12.h" />
     <ClInclude Include="Source\Graphics\IRenderer.hpp" />
+    <ClInclude Include="Source\Core\GameObject.hpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shaders\PixelShader.hlsl">
