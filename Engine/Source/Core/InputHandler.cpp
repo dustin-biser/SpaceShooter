@@ -2,7 +2,7 @@
 // InputHandler.cpp
 //
 #include "pch.h"
-#include "InputHandler.hpp"
+#include "Core/InputHandler.hpp"
 
 #if defined(WIN32)
 	#include "WinUser.h"

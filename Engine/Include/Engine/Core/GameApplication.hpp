@@ -8,7 +8,7 @@
 
 #include <windef.h>
 
-#include "Core/Common.hpp"
+#include "Core/Types.hpp"
 #include "Core/InputHandler.hpp"
 
 class IRenderer;

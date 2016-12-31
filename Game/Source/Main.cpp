@@ -2,10 +2,7 @@
 // Main.cpp
 //
 
-#include "pch.h"
-
-#include "Core/Win32Window.hpp"
-#include "Core/GameApplication.hpp"
+#include "Win32Window.hpp"
 
 int WINAPI WinMain (
 	HINSTANCE hInstance,

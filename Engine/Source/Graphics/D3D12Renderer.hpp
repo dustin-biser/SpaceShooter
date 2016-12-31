@@ -8,7 +8,7 @@
 #include <dxgi1_4.h>
 #include <DirectXMath.h>
 
-#include "Core/Common.hpp"
+#include "Core/Types.hpp"
 #include "Graphics/IRenderer.hpp"
 #include "Graphics/ShaderUtils.hpp"
 
@@ -170,50 +170,6 @@ private:
 		ID3D12CommandQueue * commandQueue
 	);
 
-	//virtual void Update () = 0;
-
-	//virtual void Render (
-	//	ID3D12GraphicsCommandList * drawCmdList
-	//) = 0;
-
-	//void PrepareRender (
-	//	ID3D12CommandAllocator * commandAllocator,
-	//	ID3D12GraphicsCommandList * drawCmdList
-	//);
-
-	//void FinalizeRender (
-	//	ID3D12GraphicsCommandList * drawCmdList,
-	//	ID3D12CommandQueue * commandQueue
-	//);
-
-	//void Present ();
-
-	//__forceinline bool SwapChainWaitableObjectIsSignaled ();
-
-
-	///// Helper function for resolving the full path of assets.
-	//std::wstring GetAssetPath (
-	//	const wchar_t * assetName
-	//);
-
-	///// Helper function for resolving the full path of assets.
-	///// Works with basic multi-byte strings.
-	//std::string GetAssetPath (
-	//	const char * assetName
-	//);
-
-	//void SetCustomWindowText (
-	//	LPCWSTR text
-	//);
-
-	///// Path of the demo's current working directory.
-	//std::wstring m_workingDirPath;
-
-	///// The shared solution asset path.
-	//std::wstring m_sharedAssetPath;
-
-	//// Window title.
-	//std::wstring m_windowTitle;
 };
 	
 

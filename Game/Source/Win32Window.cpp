@@ -1,12 +1,12 @@
-#include "pch.h"
-
+//
+// Win32Window.cpp
+//
 #include <cassert>
 #include <chrono>
 #include <cwchar>
 #include <thread>
 
-#include "Core/Win32Window.hpp"
-#include "Core/GameApplication.hpp"
+#include "Win32Window.hpp"
 
 HWND Win32Window::_hWindow = nullptr;
 
@@ -18,7 +18,7 @@ int Win32Window::Run (
     HINSTANCE hInstance,
     int nCmdShow
 ) {
-	ASSERT(game);
+	assert(game);
 
 	//-- Initialize the window class:
 	WNDCLASSEX windowClass = { 0 };
@@ -95,7 +95,7 @@ int Win32Window::Run (
 			float msPerFrame = fpsTimer / float(frameCount);
             float fps = float(frameCount) / fpsTimer * 1000.0f;
             char buffer[256];
-			sprintf(buffer, "%s - %.1f fps (%.2f ms)", 
+			sprintf_s(buffer, 256, "%s - %.1f fps (%.2f ms)", 
 				game->getWindowTitle(), fps, msPerFrame);
             ::SetWindowText(_hWindow, buffer);
 
@@ -146,7 +146,7 @@ LRESULT CALLBACK Win32Window::WindowProc (
 		POINT p;
 		GetCursorPos(&p);
 		ScreenToClient(hWnd, &p);
-		LOG_INFO("Cursor: (%d,%d)", p.x, p.y);
+		//LOG_INFO("Cursor: (%d,%d)", p.x, p.y);
 		return 0;
 	}
 

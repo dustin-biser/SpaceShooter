@@ -4,7 +4,6 @@
 #pragma once
 
 #include <windef.h>
-#include "Core/Common.hpp"
 
 ///	Interface representing a rendering system.
 class IRenderer {

@@ -3,8 +3,6 @@
 //
 #pragma once
 
-#include "Core/Common.hpp"
-
 #include "Graphics/RenderComponent.hpp"
 
 struct GameObject {

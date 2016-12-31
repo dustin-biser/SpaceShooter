@@ -56,6 +56,7 @@ void GameApplication::initialze (
 	AssetLoader::load ("low_poly_ship", &objAsset);
 
 	ShaderGroup shader;
+
 	//AssetLoader::load ("defaultVS", &shader.vertexShader);
 	//AssetLoader::load ("defaultPS", &shader.pixelShader);
 

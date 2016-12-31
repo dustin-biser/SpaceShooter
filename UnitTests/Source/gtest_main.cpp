@@ -5,7 +5,7 @@
 // of test results.
 //
 
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 using namespace testing;
 

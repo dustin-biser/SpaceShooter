@@ -3,7 +3,7 @@
 //
 #pragma once
 
-#include "Core/Common.hpp"
+#include "Core/Types.hpp"
 
 class InputHandler {
 public:

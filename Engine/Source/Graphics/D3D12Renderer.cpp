@@ -14,11 +14,22 @@
 #include "Graphics/D3D12Renderer.hpp"
 #include "Graphics/d3dx12.h"
 
-internal void waitForGpuFence (
-	ID3D12Fence * fence,
-	uint64 completionValue,
-	HANDLE fenceEvent
-);
+namespace
+{
+	void waitForGpuFence (
+		ID3D12Fence * fence,
+		uint64 completionValue,
+		HANDLE fenceEvent
+	) {
+		if (fence->GetCompletedValue () < completionValue) {
+			CHECK_D3D_RESULT (
+				fence->SetEventOnCompletion (completionValue, fenceEvent)
+			);
+			// fenceEvent will be signaled once GPU updates fence object to completionValue.
+			::WaitForSingleObject (fenceEvent, INFINITE);
+		}
+	}
+}
 
 
 //---------------------------------------------------------------------------------------
@@ -823,22 +834,6 @@ void D3D12Renderer::createRootSignature ()
 			IID_PPV_ARGS (&m_rootSignature)
 		)
 	);
-}
-
-//---------------------------------------------------------------------------------------
-internal void waitForGpuFence (
-	ID3D12Fence * fence,
-	uint64 completionValue,
-	HANDLE fenceEvent
-)
-{
-	if (fence->GetCompletedValue () < completionValue) {
-		CHECK_D3D_RESULT (
-			fence->SetEventOnCompletion (completionValue, fenceEvent)
-		);
-		// fenceEvent will be signaled once GPU updates fence object to completionValue.
-		::WaitForSingleObject (fenceEvent, INFINITE);
-	}
 }
 
 //---------------------------------------------------------------------------------------

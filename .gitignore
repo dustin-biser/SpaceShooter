@@ -5,19 +5,15 @@
 !.gitignore
 !README.md
 !SpaceShooter.sln
-!SpaceShooter.vcxproj
-!PostBuild.bat
 
-!Assets
-!Assets/**
+!Engine/Engine.vcxproj
+!Engine/Include/**
+!Engine/Source/**
 
-!Source
-!Source/**
+!Game/Game.vcxproj
+!Game/Source/**
+!Game/Assets/**
 
-!UnitTests
 !UnitTests/UnitTests.vcxproj
-!UnitTests/external
 !UnitTests/external/**
-!UnitTests/Source
 !UnitTests/Source/**
-

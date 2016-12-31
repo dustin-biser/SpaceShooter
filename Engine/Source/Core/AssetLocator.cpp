@@ -9,24 +9,26 @@
 #include <libloaderapi.h>
 #include <cstring>
 
-internal void GetWorkingDir (
-	char * path,
-	uint pathSize
-)
+namespace
 {
-	ASSERT (path);
+	void GetWorkingDir (
+		char * path,
+		uint pathSize
+	) {
+		ASSERT (path);
 
-	ulong size = GetModuleFileName (nullptr, path, pathSize);
-	if (size == 0 || size == pathSize) {
-		// Method failed or path was truncated.
-		__debugbreak ();
-	}
+		ulong size = GetModuleFileName (nullptr, path, pathSize);
+		if (size == 0 || size == pathSize) {
+			// Method failed or path was truncated.
+			__debugbreak ();
+		}
 
-	// Get pointer to last backslash in path.
-	char * lastSlash = std::strrchr (path, '\\');
-	if (lastSlash) {
-		// Insert null char after last backslash.
-		*(lastSlash + 1) = '\0';
+		// Get pointer to last backslash in path.
+		char * lastSlash = std::strrchr (path, '\\');
+		if (lastSlash) {
+			// Insert null char after last backslash.
+			*(lastSlash + 1) = '\0';
+		}
 	}
 }
 
