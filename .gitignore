@@ -9,13 +9,15 @@
 !PostBuild.bat
 
 !Assets
-!Assets/Materials
-!Assets/Meshes
-!Assets/Shaders
-!Assets/Textures
+!Assets/**
 
 !Source
-!Source/Collision
-!Source/Core
-!Source/Graphics
-!Source/Input
+!Source/**
+
+!UnitTests
+!UnitTests/UnitTests.vcxproj
+!UnitTests/external
+!UnitTests/external/**
+!UnitTests/Source
+!UnitTests/Source/**
+

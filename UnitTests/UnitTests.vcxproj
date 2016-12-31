@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8B736D01-930C-45F1-AA01-7AF4938E14EE}</ProjectGuid>
+    <ProjectGuid>{FCFF99AA-B699-4245-826D-233BABE68E79}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>SpaceShooter</RootNamespace>
+    <RootNamespace>UnitTests</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -74,18 +74,18 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <SourcePath>$(SourcePath)</SourcePath>
-    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectionDir)build\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)build\</OutDir>
+    <IntDir>$(OutDir)$(Platform)\$(Configuration)\</IntDir>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <SourcePath>$(SourcePath)</SourcePath>
-    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectionDir)build\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)build\</OutDir>
+    <IntDir>$(OutDir)$(Platform)\$(Configuration)\</IntDir>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -93,42 +93,32 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source\Core;$(ProjectDir)Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source;$(ProjectDir)Source;$(ProjectDir)external\gtest;$(ProjectDir)external\gtest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>
+      </AdditionalOptions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d12.lib;dxgi.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <ShowProgress>NotSet</ShowProgress>
+      <AdditionalLibraryDirectories>C:\Users\Dustin\Projects\C++\SpaceShooter\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
-    <FxCompile>
-      <EntryPointName>
-      </EntryPointName>
-    </FxCompile>
-    <FxCompile>
-      <ShaderModel>5.1</ShaderModel>
-      <AdditionalIncludeDirectories>$(ProjectDir)Assets\Shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </FxCompile>
-    <PostBuildEvent>
-      <Command>call PostBuild.bat</Command>
-    </PostBuildEvent>
-    <PreBuildEvent>
-      <Command>
-      </Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -138,10 +128,10 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -150,90 +140,31 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source\Core;$(ProjectDir)Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source;$(ProjectDir)Source;$(ProjectDir)external\gtest;$(ProjectDir)external\gtest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>
+      </AdditionalOptions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d12.lib;dxgi.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <ShowProgress>NotSet</ShowProgress>
+      <AdditionalLibraryDirectories>C:\Users\Dustin\Projects\C++\SpaceShooter\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
-    <FxCompile>
-      <EntryPointName>
-      </EntryPointName>
-    </FxCompile>
-    <FxCompile>
-      <ShaderModel>5.1</ShaderModel>
-      <AdditionalIncludeDirectories>$(ProjectDir)Assets\Shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </FxCompile>
-    <PostBuildEvent>
-      <Command>call PostBuild.bat</Command>
-    </PostBuildEvent>
-    <PreBuildEvent>
-      <Command>
-      </Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include=".gitignore" />
-    <None Include="Assets\Shaders\PSInput.hlsli" />
-    <None Include="PostBuild.bat" />
-    <None Include="README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Source\Core\AssetLocator.cpp" />
-    <ClCompile Include="Source\Core\Memory.cpp" />
-    <ClCompile Include="Source\Graphics\ShaderUtils.cpp" />
-    <ClInclude Include="Source\Core\AssetLoader.inl">
-      <FileType>CppCode</FileType>
-    </ClInclude>
-    <ClCompile Include="Source\Core\GameApplication.cpp" />
-    <ClCompile Include="Source\Core\InputHandler.cpp" />
-    <ClCompile Include="Source\Core\Main.cpp" />
-    <ClCompile Include="Source\Core\pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\Core\Win32Window.cpp" />
-    <ClCompile Include="Source\Graphics\D3D12Renderer.cpp" />
-    <ClInclude Include="Source\Core\AssetLocator.hpp" />
-    <ClInclude Include="Source\Core\Memory.hpp" />
-    <ClInclude Include="Source\Graphics\RenderComponent.hpp" />
-    <ClInclude Include="Source\Graphics\ShaderUtils.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Source\Core\AssetLoader.hpp" />
-    <ClInclude Include="Source\Core\DebugUtils.hpp" />
-    <ClInclude Include="Source\Core\GameApplication.hpp" />
-    <ClInclude Include="Source\Core\InputHandler.hpp" />
-    <ClInclude Include="Source\Core\Types.hpp" />
-    <ClInclude Include="Source\Core\pch.h" />
-    <ClInclude Include="Source\Core\Win32Window.hpp" />
-    <ClInclude Include="Source\Graphics\D3D12Renderer.hpp" />
-    <ClInclude Include="Source\Graphics\d3dx12.h" />
-    <ClInclude Include="Source\Graphics\IRenderer.hpp" />
-    <ClInclude Include="Source\Core\GameObject.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Assets\Shaders\PixelShader.hlsl">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PSMain</EntryPointName>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PSMain</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Assets\Shaders\VertexShader.hlsl">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VSMain</EntryPointName>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VSMain</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-    </FxCompile>
+    <ClCompile Include="external\gtest\src\gtest-all.cc" />
+    <ClCompile Include="Source\Core\Test_Memory.cpp" />
+    <ClCompile Include="Source\gtest_main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
