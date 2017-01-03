@@ -40,9 +40,11 @@ class LinearAllocator : public Allocator {
 public:
 	/// Constructs allocator using pre-allocated memory as its backing storage.
 	LinearAllocator (
-		byte * backingStore, ///< Pointer to pre-allocated memory.
+		byte * backingStore, ///< Pointer to backing memory arena.
 		size_t size          ///< Size in bytes of backing store.
 	);
+
+	~LinearAllocator ();
 
 	void * allocate (
 		size_t size,
@@ -60,18 +62,18 @@ public:
 	void reset ();
 
 private:
-	byte * _start; // Start of backing storage.
-	byte * _end;   // End of backing storage.
-	byte * _free;  // Address of next free byte for allocation.
+	byte * const _start; //< Start of memory arena.
+	byte * const _end;   //< End of memory arena.
+	byte * _free;  //< Address of next free byte for allocation.
 };
 
 
 
 /// Creates a new object of type T using the supplied memory allocator.
-#define make_new (a, T, ...)  (new ((a).allocate(sizeof(T), alignof(T))) T(__VA_ARGS__))
+#define make_new(a, T, ...)  (new ((a).allocate(sizeof(T), alignof(T))) T(__VA_ARGS__))
 
 /// Frees an object allocated with make_new.
-#define make_delete (a, T, p)  do {if (p) {(p)->~T(); a.deallocate(p);}} while (0)
+#define make_delete(a, T, p)  do {if (p) {(p)->~T(); a.deallocate(p);}} while (0)
 
 namespace memory
 {
@@ -98,10 +100,15 @@ namespace memory_globals
 
 	/// Returns the default linear allocator for persistent allocations.
 	///
-	/// You need to call init() for this allocator to be available.
+	/// A prior call to memory_globals::init() must be made for this allocator to be
+	/// available.
 	LinearAllocator & linearAllocator ();
 
+
 #if false 
+
+	//TODO Dustin - Implement frameAllocator based on ring buffer.
+
 	/// Returns the default frame allocator for per frame data.
 	///
 	/// You need to call init() for this allocator to be available.
@@ -113,6 +120,8 @@ namespace memory_globals
 }
 
 
+
+//TODO Dustin - Do we want to disable malloc, new, and friends?
 //#define DISABLE_EXPLICIT_MEMORY_ALLOCATIONS
 #ifdef DISABLE_EXPLICIT_MEMORY_ALLOCATIONS
 

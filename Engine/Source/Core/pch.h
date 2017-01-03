@@ -15,6 +15,7 @@
 
 #include <string>
 #include <cstdlib>
+#include <cassert>
 
 #include "Core/Types.hpp"
 #include "Core/DebugUtils.hpp"

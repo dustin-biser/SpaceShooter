@@ -15,7 +15,7 @@ namespace
 		char * path,
 		uint pathSize
 	) {
-		ASSERT (path);
+		assert (path);
 
 		ulong size = GetModuleFileName (nullptr, path, pathSize);
 		if (size == 0 || size == pathSize) {
@@ -38,7 +38,7 @@ namespace
 std::string GetAssetPath (
 	const char * assetName
 ) {
-	ASSERT (assetName);
+	assert (assetName);
 
 	//TODO (Dustin) - For now assume assets are in working dir. Later we want asset path lookup table.
 

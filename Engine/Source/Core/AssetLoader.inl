@@ -24,7 +24,7 @@ inline void AssetLoader::load (
 	AssetId assetId,
 	std::shared_ptr<CompiledShader> * outShader
 ) {
-	ASSERT (outShader);
+	assert(outShader);
 
 	// Store of previously loaded shaders
 	static std::unordered_map<AssetId, std::shared_ptr<CompiledShader>> loadedShaders;

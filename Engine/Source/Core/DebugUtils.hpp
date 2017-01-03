@@ -5,7 +5,6 @@
 
 #include <cwchar>
 #include <debugapi.h>
-#include <cassert>
 #include <winnt.h>
 
 #define LOG_BUFFER_LENGTH 512
@@ -53,13 +52,6 @@
 #define LOG_ERROR(format, ...)
 #endif
 
-
-// Debug assert test.
-#if defined(_DEBUG)
-#define ASSERT(x) assert(x)
-#else
-#define ASSERT(x)
-#endif
 
 #define toString(x) #x
 #define toWideString(x) L#x

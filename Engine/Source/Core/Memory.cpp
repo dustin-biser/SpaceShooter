@@ -6,16 +6,25 @@
 #include "Core/Memory.hpp"
 
 // Allocation storage to reserve from bss segment of executable.
-#define BSS_STORAGE_RESERVED  20971520  // 20 MiB
+#define BSS_ARENA_RESERVED  20971520  // 20 MiB
 
 
 //---------------------------------------------------------------------------------------
 LinearAllocator::LinearAllocator (
 	byte * backingStore,
 	size_t size
-) {
-	_start = backingStore;
-	_end = _start + size;
+) 
+	: _start(backingStore),
+	  _end(backingStore + size)
+{
+	_free = _start;
+}
+
+//---------------------------------------------------------------------------------------
+LinearAllocator::~LinearAllocator ()
+{
+	// Assert no memory leaks.
+	assert (_free == _start);
 }
 
 //---------------------------------------------------------------------------------------
@@ -23,9 +32,13 @@ void * LinearAllocator::allocate (
 	size_t size,
 	size_t align
 ) {
-	//TODO Dustin - Finish implementation.
+	// Compute next aligned memory location
+	void * result = memory::align_forward (_free, align);
 
-	return nullptr;
+	// Bump free pointer
+	_free = reinterpret_cast<byte *>(result) + size;
+
+	return result;
 }
 
 //---------------------------------------------------------------------------------------
@@ -40,29 +53,29 @@ size_t LinearAllocator::allocatedSize (
 //---------------------------------------------------------------------------------------
 size_t LinearAllocator::totalAllocated ()
 {
-	//TODO Dustin - Finish implementation.
-
-	return 0u;
+	assert (_free >= _start);
+	return _free - _start;
 }
 
 //---------------------------------------------------------------------------------------
 void LinearAllocator::reset ()
 {
-
+	// Reset free pointer to start of arena.
+	_free = _start;
 }
 
 //---------------------------------------------------------------------------------------
 namespace
 {
 	struct MemoryGlobals {
+		// Statically allocated memory for storing global allocators.
 		static const uint32 ALLOCATOR_MEMORY = sizeof (LinearAllocator);
 
 		// Bootstrap memory to hold memory_global allocators.
 		byte buffer[ALLOCATOR_MEMORY];
 
-		// Memory to use witin .bss segment of executable.
-		// Backing storeage for LinearAllocator.
-		byte bssStore[BSS_STORAGE_RESERVED];
+		// Allocation arena witin .bss segment of executable.
+		byte bssArena[BSS_ARENA_RESERVED];
 
 		LinearAllocator * linearAllocator;
 
@@ -70,19 +83,22 @@ namespace
 	};
 
 	MemoryGlobals _memory_globals;
-
+	
 } // end namespace
+
 
 
 //---------------------------------------------------------------------------------------
 namespace memory_globals
 {
+	// Must be idempotent.
 	void init ()
 	{
 		byte * p = _memory_globals.buffer;
-		byte * backingStore = _memory_globals.bssStore;
+		byte * backingStore = _memory_globals.bssArena;
+
 		_memory_globals.linearAllocator = 
-			new (p) LinearAllocator (backingStore, BSS_STORAGE_RESERVED);
+			new (p) LinearAllocator (backingStore, BSS_ARENA_RESERVED);
 
 	}
 
@@ -93,7 +109,8 @@ namespace memory_globals
 
 	void shutdown ()
 	{
-
+		_memory_globals.linearAllocator->~LinearAllocator ();
+		new (&_memory_globals) MemoryGlobals (); // Reset members
 	}
 
 }

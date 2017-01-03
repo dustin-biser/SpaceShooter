@@ -7,6 +7,75 @@
 #include "Engine/Source/Core/Memory.hpp"
 
 
+class MemoryGlobalsTest : public ::testing::Test {
+protected:
+	LinearAllocator * linearAllocator;
+
+	void SetUp () override
+	{
+		memory_globals::init ();
+		linearAllocator = &memory_globals::linearAllocator ();
+	}
+
+	void TearDown() override 
+	{
+		// Asserts no memory leaks.
+		memory_globals::shutdown ();
+		linearAllocator = nullptr;
+	}
+
+};
+
+
+namespace
+{
+	struct alignas(64) SomeStruct64
+	{
+		int x;
+	};
+
+	struct alignas(128) SomeStruct128
+	{
+		int x;
+	};
+}
+
+//---------------------------------------------------------------------------------------
+// MemoryGlobals Tests
+//---------------------------------------------------------------------------------------
+TEST_F (MemoryGlobalsTest, init_is_idempotent)
+{
+	memory_globals::init ();
+	EXPECT_EQ (0, linearAllocator->totalAllocated ());
+}
+
+TEST_F (MemoryGlobalsTest, LinearAllocator_totalAllocated)
+{
+	size_t expectedAllocatedTotal = 0;
+
+	make_new (*linearAllocator, char);
+	expectedAllocatedTotal += sizeof (char);
+
+	// '<=' necessary due to memory alignment during allocation
+	EXPECT_TRUE (expectedAllocatedTotal <= linearAllocator->totalAllocated ());
+
+	make_new (*linearAllocator, SomeStruct64);
+	expectedAllocatedTotal += sizeof (SomeStruct64);
+	EXPECT_TRUE (expectedAllocatedTotal <= linearAllocator->totalAllocated ());
+
+	make_new (*linearAllocator, SomeStruct128);
+	expectedAllocatedTotal += sizeof (double);
+	EXPECT_TRUE (expectedAllocatedTotal <= linearAllocator->totalAllocated ());
+
+	// Roll back free pointer to start of arena.
+	linearAllocator->reset ();
+
+	EXPECT_EQ (0, linearAllocator->totalAllocated ());
+}
+
+//---------------------------------------------------------------------------------------
+// memory::align_forward() Tests
+//---------------------------------------------------------------------------------------
 TEST (Memory, align_forward0)
 {
 	const size_t align = 0;

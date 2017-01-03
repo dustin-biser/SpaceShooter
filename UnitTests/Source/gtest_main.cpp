@@ -162,7 +162,7 @@ int main (int argc, char **argv)
 
 	ConfigurableEventListener * listener = new ConfigurableEventListener (default_printer);
 	listener->showEnvironment = false;
-	listener->showTestCases = false;
+	listener->showTestCases = true;
 	listener->showTestNames = false;
 	listener->showSuccesses = false;
 	listener->showInlineFailures = false;

@@ -164,6 +164,11 @@
     <ClCompile Include="Source\Core\Test_Memory.cpp" />
     <ClCompile Include="Source\gtest_main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Engine\Engine.vcxproj">
+      <Project>{8b736d01-930c-45f1-aa01-7af4938e14ee}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
