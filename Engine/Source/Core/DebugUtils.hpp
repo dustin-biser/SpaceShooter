@@ -3,23 +3,25 @@
 //
 #pragma once
 
-#include <cwchar>
 #include <debugapi.h>
 #include <winnt.h>
 
+// Max length for any logged message.
 #define LOG_BUFFER_LENGTH 512
-#define LOG_LEVEL_INFO L"Log Info: "
-#define LOG_LEVEL_WARNING L"Log Warning: "
-#define LOG_LEVEL_ERROR L"Log Error: "
+
+// Severity levels for logging:
+#define LOG_LEVEL_INFO "Log Info: "
+#define LOG_LEVEL_WARNING "Log Warning: "
+#define LOG_LEVEL_ERROR "Log Error: "
 
 #if defined(_DEBUG)
-#define LOG(levelWString, format, ...) \
+#define LOG(message, format, ...) \
 	do { \
-		wchar_t buffer[LOG_BUFFER_LENGTH]; \
-		int wcharsWritten = swprintf(buffer, LOG_BUFFER_LENGTH, levelWString); \
-		wcharsWritten += swprintf(buffer + wcharsWritten, LOG_BUFFER_LENGTH, L##format, __VA_ARGS__); \
-		swprintf(buffer + wcharsWritten, LOG_BUFFER_LENGTH, L"\n"); \
-		OutputDebugStringW(buffer); \
+		char buffer[LOG_BUFFER_LENGTH]; \
+		int charsWritten = snprintf (buffer, LOG_BUFFER_LENGTH, message); \
+		charsWritten += snprintf (buffer + charsWritten, LOG_BUFFER_LENGTH, format, __VA_ARGS__); \
+		snprintf (buffer + charsWritten, LOG_BUFFER_LENGTH, "\n"); \
+		OutputDebugString(buffer); \
 	} while(0)
 #else
 #define LOG(levelWString, format, ...)
